@@ -2,12 +2,15 @@ import requests
 import json
 import npc_price
 from products import get_products
-import get_api_token
+from dotenv import load_dotenv
+import os
 
 
 def request(itemID, amount=1, arg1=1, checknpcprice=True):
     try:
-        data = requests.get(f"https://api.hypixel.net/skyblock/bazaar/product?key={get_api_token.get(1)}&productId=" + itemID).json()
+        load_dotenv()
+        TOKEN = os.getenv("HYPIXEL_API_TOKEN")
+        data = requests.get(f"https://api.hypixel.net/skyblock/bazaar/product?key={TOKEN}&productId=" + itemID).json()
     except TypeError:
         return({"success": False, "cause": "TypeError"})
     if data["success"] == False:

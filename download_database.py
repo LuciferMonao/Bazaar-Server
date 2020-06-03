@@ -6,7 +6,8 @@ from datetime import datetime
 import time
 from products import get_products
 import time
-import get_api_token
+import os
+from dotenv import load_dotenv
 
 def save_obj(obj, name ):
     with open('products/'+ name + '.pkl', 'wb') as f:
@@ -59,11 +60,12 @@ def download_prices():
 
 
 def upload_data(data):
-    
-    URL = "http://infagsuso.bplaced.net/project/getdata.php"
+    load_dotenv()
+    URL = os.getenv("SUSO_DATABASE_URL")
+    TOKEN = os.getenv("SUSO_DATABASE_API_TOKEN")
 
     PARAMS = {
-    "tkn":get_api_token.get(0),
+    "tkn":TOKEN,
     "data":str("'" + str(data[5]) + "'")
     }
 

@@ -1,11 +1,14 @@
 
 import requests
 import minion_list
-import get_api_token
+from dotenv import load_dotenv
+import os
 
 """
 def get_products():
-    product_data = requests.get(f"https://api.hypixel.net/skyblock/bazaar/products?key={get_api_token.get(1)}").json()
+    load_env()
+    TOKEN = os.getenv("HYPIXEL_API_TOKEN")
+    product_data = requests.get(f"https://api.hypixel.net/skyblock/bazaar/products?key={TOKEN}").json()
     if not product_data["success"]:
         print("An Error occured while downloading the api data.")
         return(False)
