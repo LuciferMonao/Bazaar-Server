@@ -93,8 +93,8 @@ if __name__ == "__main__":
             print("Downloading prices via the API Socket.")
             items_loaded = download_prices()
             print("Download of {} items successfull. It took {} seconds. \nDownload: Thats an average of about {} seconds per Download.\n          The item that took the shortest was {} with {} seconds and the longest {} with {} seconds.\nSave: The item that took the shortest was {} with {} seconds and the longest {} with {} seconds.".format(items_loaded[0], time.perf_counter() - download_start, (time.perf_counter() - download_start) / items_loaded[0], str(items_loaded[1]["item"]), str(items_loaded[1]["time"]), str(items_loaded[2]["item"]), str(items_loaded[2]["time"]), str(items_loaded[3]["item"]), str(items_loaded[3]["time"]), str(items_loaded[4]["item"]), str(items_loaded[4]["time"])))
-
-            if UPLOAD_TO_DATABASE: upload_data(items_loaded)
+            load_dotenv()
+            if UPLOAD_TO_DATABASE and not os.getenv("SUSO_DATABASE_URL") == "None" and not os.getenv("SUSO_DATABASE_API_TOKEN") == "None": upload_data(items_loaded)
 
             Seconds = Minutes * 60
             for second in range(0, int(Seconds)):
