@@ -5,7 +5,7 @@ The file has to have to following content:
 
     # .env
     HYPIXEL_API_TOKEN = Token for the Hypixel Api [Obtainable by issuing the command "/api new" on the hypixel network] 
-    SUSO_DATABASE_API_TOKEN = Token for the database of the SUso, for private use use None. 
+    SUSO_DATABASE_API_TOKEN = Token for the database of the Suso, for private use use None. 
     HYPIXEL_DATABASE_URL = Url for the database of the Suso, for private use use None.  
 
-If there are questions remaining contact me at lucifermonao@gmx.de. 
+If there are questions remaining contact me at lucifermonao@gmx.de.

@@ -37,7 +37,7 @@ def request(itemID, amount=1, arg1=1, checknpcprice=True):
                     lowest = float(element["pricePerUnit"])
             sell_price = lowest
 
-        if npc_price.get_item_price(itemID) > sell_price and checknpcprice and (itemID in get_products()):
+        if npc_price.get_item_price(itemID) > sell_price:
             sell_price = npc_price.get_item_price(itemID)
 
         prices = {"buy": amount * buy_price, "sell": amount * sell_price}

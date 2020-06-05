@@ -79,7 +79,7 @@ while True:
     print(product_prices)
     PARAMS = {
         "tkn": TOKEN,
-        "data": (str("'") + str(product_prices) + str("'"))
+        "data": json.dumps(product_prices)
     }
 
     r = requests.post(url=URL, params=PARAMS) 
