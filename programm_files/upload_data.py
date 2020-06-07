@@ -1,4 +1,6 @@
-import requests, json, pythonping, datetime, dotenv, os, concurrent.futures as future, time, colorama
+import requests, json, pythonping, datetime, dotenv, os, time, colorama
+
+FILE_PATH = ".programm_data/"
 
 class item:
     def __init__(self, productID):
@@ -18,7 +20,8 @@ def get_product_price(itemID):
             success = False
             prices = [0, 0]
             print("A problem occured while Loading the prices of {}, cause: {}, time: {}".format(itemID,data["cause"], datetime.datetime.now()))
-            with open("err.log", "a") as f: f.write("time: {}, cause: {}, itemID: {}\n".format(datetime.datetime.now(), data["cause"], itemID))
+            with open(FILE_PATH + "err.log", "a") as f: f.write("time: {}, cause: {}, itemID: {}\n".format(datetime.datetime.now(), data["cause"], itemID))
+            raise ValueError
         else:
             success = True
             buy_data = data["product_info"]["buy_summary"]
@@ -35,7 +38,7 @@ def get_product_price(itemID):
                     lowest = float(element["pricePerUnit"])
             sell_price = lowest
 
-            with open("npc_prices.txt", "r") as f:
+            with open(FILE_PATH + "npc_prices.txt", "r") as f:
                 try:
                     npc_price = json.load(f)[itemID]
                     if npc_price > sell_price:
@@ -49,7 +52,7 @@ def get_product_price(itemID):
         return({"success": False, "prices": {"buy":0, "sell": 0}})
 
 def get_product_list():
-    with open("minion_data.txt", "r") as f: data = json.load(f)
+    with open(FILE_PATH + "minion_data.txt", "r") as f: data = json.load(f)
     products = []
     for key in data:
         for product in data[key]["Products"]:
