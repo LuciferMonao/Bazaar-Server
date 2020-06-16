@@ -4,7 +4,9 @@ dotenv.load_dotenv()
 
 FILE_PATH = os.getenv("FILE_PATH")
 
-WAIT =  os.getenv("WAIT")
+
+try: WAIT = int(os.getenv("WAIT"))
+except ValueError: print("{} coudn't be converted to integer. \nThe default value of 500 will be used.\nPlease enter a valid number for WAIT.".format(os.getenv("WAIT"))); WAIT = 500
 
 def delete_line(amount=1):
     for _ in range(amount): sys.stdout.write("\033[F"); sys.stdout.write("\033[K")
@@ -22,7 +24,7 @@ def get_product_price(itemID):
     if not itemID == False and not itemID == True and not itemID == None:
         dotenv.load_dotenv()
         TOKEN = os.getenv("HYPIXEL_API_TOKEN")
-        data = requests.get(f"https://api.hypixel.net/skyblock/bazaar/product?key={TOKEN}&productId=" + itemID).json()
+        data = requests.get(f"https://api.hypixel.net/skyblock/bazaar/product?key={TOKEN}&productId=" + itemID, timeout=10).json()
         if data["success"] == False:
             success = False
             prices = [0, 0]
@@ -34,14 +36,14 @@ def get_product_price(itemID):
             highest = 0
             for element in buy_data:
                 if float(element["pricePerUnit"]) >= highest:
-                    highest = float(element["pricePerUnit"])
+                    highest = float(element["pricePerUnit"])  * 0.5 + highest * 0.5
             buy_price = highest
 
             sell_data = data["product_info"]["sell_summary"]
             lowest = 1_000_000_000
             for element in sell_data:
                 if float(element["pricePerUnit"]) <= lowest:
-                    lowest = float(element["pricePerUnit"])
+                    lowest = float(element["pricePerUnit"]) * 0.5 + lowest * 0.5
             sell_price = lowest
 
             with open(FILE_PATH + "npc_prices.txt", "r") as f:
@@ -93,7 +95,7 @@ while True:
             "data": json.dumps(product_prices)
         }
 
-        r = requests.post(url=URL, params=PARAMS) 
+        r = requests.post(url=URL, params=PARAMS, timeout=10) 
         data = r.text
         print(f"Successfully uploaded the product prices, returned data: '{data}'")
         if len(data) > 2: 
