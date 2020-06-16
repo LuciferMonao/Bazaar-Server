@@ -1,4 +1,4 @@
-import requests, json, pythonping, datetime, dotenv, os, time, colorama, sys; from progress.bar import Bar
+import requests, json, pythonping, datetime, dotenv, os, time, colorama, sys, statistics; from progress.bar import Bar
 
 dotenv.load_dotenv()
 
@@ -24,7 +24,7 @@ def get_product_price(itemID):
     if not itemID == False and not itemID == True and not itemID == None:
         dotenv.load_dotenv()
         TOKEN = os.getenv("HYPIXEL_API_TOKEN")
-        data = requests.get(f"https://api.hypixel.net/skyblock/bazaar/product?key={TOKEN}&productId=" + itemID, timeout=10).json()
+        data = requests.get(f"https://api.hypixel.net/skyblock/bazaar/product?key={TOKEN}&productId=" + itemID, timeout=25).json()
         if data["success"] == False:
             success = False
             prices = [0, 0]
@@ -33,17 +33,21 @@ def get_product_price(itemID):
         else:
             success = True
             buy_data = data["product_info"]["buy_summary"]
-            highest = 0
+            highest = -1
             for element in buy_data:
                 if float(element["pricePerUnit"]) >= highest:
-                    highest = float(element["pricePerUnit"])  * 0.5 + highest * 0.5
+                    if float(element["pricePerUnit"]) >= highest * 10 and not highest == -1: highest = sum(highest, int(element["pricePerUnit"])) / 2
+                    elif highest == -1: highest = float(element["pricePerUnit"])
+                    else: highest = float(element["pricePerUnit"]) * 0.95 + highest * 0.05
             buy_price = highest
 
             sell_data = data["product_info"]["sell_summary"]
             lowest = 1_000_000_000
             for element in sell_data:
                 if float(element["pricePerUnit"]) <= lowest:
-                    lowest = float(element["pricePerUnit"]) * 0.5 + lowest * 0.5
+                    if float(element["pricePerUnit"]) <= highest / 10 and not lowest == 1_000_000_000: lowest = sum(lowest, int(element["pricePerUnit"])) / 2
+                    elif lowest == 1_000_000_000: lowest = float(element["pricePerUnit"])
+                    else: lowest = float(element["pricePerUnit"]) * 0.95 + lowest * 0.05
             sell_price = lowest
 
             with open(FILE_PATH + "npc_prices.txt", "r") as f:
@@ -95,7 +99,7 @@ while True:
             "data": json.dumps(product_prices)
         }
 
-        r = requests.post(url=URL, params=PARAMS, timeout=10) 
+        r = requests.post(url=URL, params=PARAMS, timeout=30) 
         data = r.text
         print(f"Successfully uploaded the product prices, returned data: '{data}'")
         if len(data) > 2: 
