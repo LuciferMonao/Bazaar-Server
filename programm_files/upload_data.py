@@ -38,7 +38,7 @@ def get_product_price(itemID):
                 if float(element["pricePerUnit"]) >= highest:
                     if float(element["pricePerUnit"]) >= highest * 10 and not highest == -1: highest = sum(highest, int(element["pricePerUnit"])) / 2
                     elif highest == -1: highest = float(element["pricePerUnit"])
-                    else: highest = float(element["pricePerUnit"]) * 0.95 + highest * 0.05
+                    else: highest = float(element["pricePerUnit"]) * 0.9 + highest * 0.1
             buy_price = highest
 
             sell_data = data["product_info"]["sell_summary"]
@@ -47,7 +47,7 @@ def get_product_price(itemID):
                 if float(element["pricePerUnit"]) <= lowest:
                     if float(element["pricePerUnit"]) <= highest / 10 and not lowest == 1_000_000_000: lowest = sum(lowest, int(element["pricePerUnit"])) / 2
                     elif lowest == 1_000_000_000: lowest = float(element["pricePerUnit"])
-                    else: lowest = float(element["pricePerUnit"]) * 0.95 + lowest * 0.05
+                    else: lowest = float(element["pricePerUnit"]) * 0.9 + lowest * 0.1
             sell_price = lowest
 
             with open(FILE_PATH + "npc_prices.txt", "r") as f:
